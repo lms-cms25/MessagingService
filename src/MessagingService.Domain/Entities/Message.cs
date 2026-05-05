@@ -11,7 +11,7 @@ public class Message
     public bool IsAnswered { get; set; }
     public List<Like> Likes { get; private set; } = [];
     public string ProfileName { get; private set; } = null!;
-    public DateTime CreatedAtUtc { get; private set; }
+    public DateTime CreatedAtUtc { get; private set; } = DateTime.UtcNow;
 
 
     private Message() { }
@@ -25,7 +25,6 @@ public class Message
             Text = text,
             IsQuestion = !isInstructor && isQuestion,
             ProfileName = profileName,
-            CreatedAtUtc = DateTime.UtcNow
         };
 
         if (isInstructor)
