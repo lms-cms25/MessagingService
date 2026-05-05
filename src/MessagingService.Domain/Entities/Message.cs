@@ -2,20 +2,41 @@
 
 public class Message
 {
-    public string Id { get; set; } = null!;
-    public string UserId { get; set; } = null!;
-    public string LiveClassId { get; set; } = null!;
+    public Guid Id { get; private set; }
+    public Guid? StudentId { get; private set; }
+    public string LiveClassId { get; private set; } = null!;
+    public Guid? InstructorId { get; private set; }
     public string Text { get; set; } = null!;
     public bool IsQuestion { get; set; }
     public bool IsAnswered { get; set; }
-    public MessageLike[]? Like { get; set; } = null!;
-    public string ProfileName { get; set; } = null!;
-    public DateTime CreatedAtUtc { get; set; }
+    public List<Like> Likes { get; private set; } = [];
+    public string ProfileName { get; private set; } = null!;
+    public DateTime CreatedAtUtc { get; private set; }
 
-}
 
-public class MessageLike
-{
-    public string UserId { get; set; } = null!;
-    public string ProfileName { get; set; } = null!;
+    private Message() { }
+
+    public static Message Create(Guid senderId, string liveClassId, string text, string profileName, bool isQuestion, bool isInstructor)
+    {
+        Message message = new()
+        {
+            Id = Guid.NewGuid(),
+            LiveClassId = liveClassId,
+            Text = text,
+            IsQuestion = !isInstructor && isQuestion,
+            ProfileName = profileName,
+            CreatedAtUtc = DateTime.UtcNow
+        };
+
+        if (isInstructor)
+        {
+            message.InstructorId = senderId;
+        } else
+        {
+            message.StudentId = senderId;
+        }
+
+        return message;
+    }
+
 }
